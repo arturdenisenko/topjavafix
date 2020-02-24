@@ -42,6 +42,7 @@ public class MealService {
     }
 
     public List<Meal> getByName(String name, Integer id) {
+        log.debug("get Meal by name and user id");
         ModelFilter filter = new MealByNameFilter();
         return filter.meetCriteria((List) repository.getAll(id), name);
     }

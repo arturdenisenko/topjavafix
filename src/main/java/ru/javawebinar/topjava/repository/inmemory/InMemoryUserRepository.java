@@ -7,10 +7,12 @@ import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 import ru.javawebinar.topjava.util.UsersUtil;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @Repository
 public class InMemoryUserRepository implements UserRepository {
@@ -47,12 +49,22 @@ public class InMemoryUserRepository implements UserRepository {
         return repository.get(id);
     }
 
+    /**
+     *
+     * @return User List sorted by name
+     */
     @Override
     public List<User> getAll() {
         log.info("getAll");
-        return (List<User>) repository.values();
+        return repository.values().stream().sorted(Comparator.comparing(User::getName)).collect(Collectors.toList());
     }
 
+    /**
+     * HW2 optional
+     *
+     * @param email of search user
+     * @return user with @param = email
+     */
     @Override
     public User getByEmail(String email) {
         log.info("get user by Email = {}", email);
