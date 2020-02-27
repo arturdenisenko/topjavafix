@@ -32,6 +32,14 @@
     <form method="post" action="meals">
         <input type="hidden" name="id" value="${meal.id}">
         <dl>
+            <dt>User Id:</dt>
+            <dd><select name="userId">
+                <option value="1">User 1</option>
+                <option value="2">User 2</option>
+                <option value="3">User 3 test not exist</option>
+            </select>></dd>
+        </dl>
+        <dl>
             <dt>DateTime:</dt>
             <dd><input type="datetime-local" value="${meal.dateTime}" name="dateTime" required></dd>
         </dl>

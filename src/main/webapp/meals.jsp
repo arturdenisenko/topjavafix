@@ -3,6 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://topjava.javawebinar.ru/functions" %>
 <%--<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>--%>
+
 <html>
 <head>
     <title>Meal list</title>
@@ -23,6 +24,27 @@
     <h2>Meals</h2>
     <a href="meals?action=create">Add Meal</a>
     <br><br>
+
+    <form method="GET" action="meals">
+        <input type="hidden" name="action" value="getAll">
+        <label>Choose user here
+            <select name="userId">
+                <option value="1">User 1</option>
+                <option value="2">User 2</option>
+                <option value="3">User 3 for test</option>
+            </select>
+        </label>
+        <button type="submit">show</button>
+    </form>
+
+    <script>
+        $('form').submit(function(){
+            $(this).attr('action',$(this).attr('action')+$('#userId').val());
+            $(this).submit();
+        });
+
+    </script>
+
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
         <tr>

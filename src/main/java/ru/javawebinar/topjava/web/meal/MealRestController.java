@@ -2,6 +2,7 @@ package ru.javawebinar.topjava.web.meal;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 
@@ -12,20 +13,24 @@ import static org.slf4j.LoggerFactory.getLogger;
 import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 
+@Controller
 public class MealRestController {
 
     private static final Logger log = getLogger(MealRestController.class);
 
-    @Autowired
-    private MealService service;
+    private final MealService service;
+
+    public MealRestController(MealService service) {
+        this.service = service;
+    }
 
     public List<Meal> getAll(Integer userId) {
-        log.info("get all meals from users");
+        log.info("get all meals from user with id {}", userId);
         return service.getUserMeals(userId);
     }
 
     public Meal get(int id) {
-        log.info("get {}", id);
+        log.info("get meal wtih {}", id);
         return service.get(id);
     }
 

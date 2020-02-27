@@ -15,5 +15,5 @@ public interface MealRepository {
     // null if not found
     Meal get(int id);
 
-    Collection<Meal> getAll(Integer userId);
+    Collection<Meal> getAll(int userId);
 }

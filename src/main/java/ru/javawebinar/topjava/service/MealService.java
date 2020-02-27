@@ -9,6 +9,7 @@ import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.DateTimeUtil;
 
 import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,7 +56,7 @@ public class MealService {
         if (userId == null) {
             return null;
         }
-        return (List<Meal>) repository.getAll(userId);
+        return repository.getAll(userId).stream().sorted(Comparator.comparing(Meal::getDate).reversed()).collect(Collectors.toList());
     }
 
 
