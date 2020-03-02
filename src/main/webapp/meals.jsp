@@ -25,6 +25,7 @@
     <a href="meals?action=create">Add Meal</a>
     <br><br>
 
+
     <form method="GET" action="meals">
         <input type="hidden" name="action" value="getAll">
         <label>Choose user here

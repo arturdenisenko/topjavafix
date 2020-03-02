@@ -3,6 +3,7 @@ package ru.javawebinar.topjava.repository.inmemory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import ru.javawebinar.topjava.model.AbstractNamedEntity;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 import ru.javawebinar.topjava.util.UsersUtil;
@@ -16,6 +17,8 @@ import java.util.stream.Collectors;
 
 @Repository
 public class InMemoryUserRepository implements UserRepository {
+
+    private final Comparator<User> comparator = Comparator.comparing(AbstractNamedEntity::getName);
     private static final Logger log = LoggerFactory.getLogger(InMemoryUserRepository.class);
 
     private Map<Integer, User> repository = new ConcurrentHashMap<>();
@@ -56,7 +59,10 @@ public class InMemoryUserRepository implements UserRepository {
     @Override
     public List<User> getAll() {
         log.info("getAll");
-        return repository.values().stream().sorted(Comparator.comparing(User::getName)).collect(Collectors.toList());
+        return repository.values()
+                .stream()
+                .sorted(comparator)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -68,7 +74,8 @@ public class InMemoryUserRepository implements UserRepository {
     @Override
     public User getByEmail(String email) {
         log.info("get user by Email = {}", email);
-        return this.getAll().stream().filter(user -> user.getEmail().equals(email))
+        return this.getAll().stream()
+                .filter(user -> user.getEmail().equals(email))
                 .reduce((a, b) -> {
                     throw new IllegalStateException("Multiple email elements !: " + a + ", " + b);
                 })

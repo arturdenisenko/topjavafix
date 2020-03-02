@@ -24,36 +24,36 @@ public class MealRestController {
         this.service = service;
     }
 
-    public List<Meal> getAll(Integer userId) {
+    public List<Meal> getAll(int userId) {
         log.info("get all meals from user with id {}", userId);
         return service.getUserMeals(userId);
     }
 
-    public Meal get(int id) {
+    public Meal get(int id, int userId) {
         log.info("get meal wtih {}", id);
-        return service.get(id);
+        return service.get(id, userId);
     }
 
-    public Meal create(Meal meal) {
+    public Meal create(Meal meal, int userId) {
         log.info("create {}", meal);
         checkNew(meal);
-        return service.create(meal);
+        return service.create(meal, userId);
     }
 
-    public void delete(int id) {
+    public void delete(int id, int userId) {
         log.info("delete {}", id);
-        service.delete(id);
+        service.delete(id, userId);
     }
 
-    public void update(Meal meal, int id) {
-        log.info("update {} with id={}", meal, id);
-        assureIdConsistent(meal, id);
-        service.update(meal);
+    public void update(Meal meal, int userId) {
+        log.info("update {} with id={}", meal, userId);
+        assureIdConsistent(meal, userId);
+        service.update(meal, userId);
     }
 
-    public List<Meal> getByName(String name, Integer id) {
-        log.info("get meal by description {} and user id {}", name, id);
-        return service.getByName(name, id);
+    public List<Meal> getByName(String name, Integer userId) {
+        log.info("get meal by description {} and user id {}", name, userId);
+        return service.getByName(name, userId);
     }
 
     public List<Meal> getByDateTime(LocalTime startDateTime, LocalTime endDateTime, Integer userId) {

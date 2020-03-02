@@ -36,7 +36,7 @@ public class MealServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         String id = request.getParameter("id");
-        String userId = request.getParameter("userId");
+        int userId = Integer.parseInt(request.getParameter("userId"));
 
         Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id), Integer.valueOf(userId),
                 LocalDateTime.parse(request.getParameter("dateTime")),
@@ -44,7 +44,7 @@ public class MealServlet extends HttpServlet {
                 Integer.parseInt(request.getParameter("calories")));
 
         log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
-        mealRestController.create(meal);
+        mealRestController.create(meal, userId);
         response.sendRedirect("meals");
     }
 
@@ -62,14 +62,14 @@ public class MealServlet extends HttpServlet {
             case "delete":
                 int id = getId(request);
                 log.info("Delete {}", id);
-                mealRestController.delete(id);
+                mealRestController.delete(id, userId);
                 response.sendRedirect("meals");
                 break;
             case "create":
             case "update":
                 final Meal meal = "create".equals(action) ?
                         new Meal(userId, LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
-                        mealRestController.get(getId(request));
+                        mealRestController.get(getId(request), userId);
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
                 break;

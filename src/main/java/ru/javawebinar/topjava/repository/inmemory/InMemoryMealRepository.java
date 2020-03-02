@@ -23,11 +23,13 @@ public class InMemoryMealRepository implements MealRepository {
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MealsUtil.MEALS.forEach(this::save);
+        MealsUtil.MEALS.forEach(m -> {
+            save(m, m.getUserId());
+        });
     }
 
     @Override
-    public Meal save(Meal meal) {
+    public Meal save(Meal meal, int userId) {
         log.info("save new Meal {}", meal.toString());
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
@@ -39,25 +41,23 @@ public class InMemoryMealRepository implements MealRepository {
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(int id, int userId) {
         log.info("remove meal with id {}", id);
         return repository.remove(id) != null;
     }
 
     @Override
-    public Meal get(int id) {
-        log.info("get meal with id {}", id);
+    public Meal get(int id, int userId) {
+        log.info("get meal with id {} and user id {}", id, userId);
         return repository.get(id);
     }
 
     @Override
-    public Collection<Meal> getAll(int id) {
-        log.info("get all meals by user id = {}", id);
-        return filterByUserId(id);
-    }
-
-    private Collection<Meal> filterByUserId(int id) {
+    public Collection<Meal> getAll(int userId) {
+        log.info("get all meals by user id = {}", userId);
         Collection<Meal> collection = repository.values();
-        return collection.stream().filter(meal -> meal.getUserId() == id).collect(Collectors.toCollection(ArrayList::new));
+        return collection.stream()
+                .filter(meal -> meal.getUserId() == userId)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }

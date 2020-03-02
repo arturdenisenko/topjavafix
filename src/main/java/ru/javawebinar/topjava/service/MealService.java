@@ -27,23 +27,23 @@ public class MealService {
         this.repository = repository;
     }
 
-    public Meal create(Meal meal) {
+    public Meal create(Meal meal, int userId) {
         log.debug("service Create {}", meal.toString());
-        return repository.save(meal);
+        return repository.save(meal, userId);
     }
 
-    public void delete(int id) {
+    public void delete(int id, int userId) {
         log.debug("service Delete {}", id);
-        checkNotFoundWithId(repository.delete(id), id);
+        checkNotFoundWithId(repository.delete(id, userId), id);
     }
 
-    public Meal get(int id) {
+    public Meal get(int id, int userId) {
         log.debug("get Meal by id = {}", id);
-        return checkNotFoundWithId(repository.get(id), id);
+        return checkNotFoundWithId(repository.get(id, userId), id);
     }
 
     public List<Meal> getByName(String name, Integer id) {
-        log.debug("get Meal by name and user id");
+        log.debug("get Meal {} by name and user id {}", name, id);
         ModelFilter filter = new MealByNameFilter();
         return filter.meetCriteria((List) repository.getAll(id), name);
     }
@@ -56,11 +56,13 @@ public class MealService {
         if (userId == null) {
             return null;
         }
-        return repository.getAll(userId).stream().sorted(Comparator.comparing(Meal::getDate).reversed()).collect(Collectors.toList());
+        return repository.getAll(userId).stream()
+                .sorted(Comparator.comparing(Meal::getDate).reversed())
+                .collect(Collectors.toList());
     }
 
 
-    public void update(Meal meal) {
-        checkNotFoundWithId(repository.save(meal), meal.getId());
+    public void update(Meal meal, int userId) {
+        checkNotFoundWithId(repository.save(meal, userId), meal.getId());
     }
 }
