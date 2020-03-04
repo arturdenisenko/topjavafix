@@ -31,25 +31,29 @@ public class InMemoryMealRepository implements MealRepository {
     @Override
     public Meal save(Meal meal, int userId) {
         log.info("save new Meal {}", meal.toString());
+
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
+            meal.setUserId(userId);
             repository.put(meal.getId(), meal);
             return meal;
         }
         // handle case: update, but not present in storage
-        return repository.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
+        return checkUserAffiliation(meal.getId(), userId)
+                ? repository.computeIfPresent(meal.getId(), (id, oldMeal) -> meal) : null;
+
     }
 
     @Override
     public boolean delete(int id, int userId) {
-        log.info("remove meal with id {}", id);
-        return repository.remove(id) != null;
+        log.info("remove meal with id {} user  {}", id, userId);
+        return checkUserAffiliation(id, userId) && repository.remove(id) != null;
     }
 
     @Override
     public Meal get(int id, int userId) {
         log.info("get meal with id {} and user id {}", id, userId);
-        return repository.get(id);
+        return checkUserAffiliation(id, userId) ? repository.get(id) : null;
     }
 
     @Override
@@ -59,5 +63,9 @@ public class InMemoryMealRepository implements MealRepository {
         return collection.stream()
                 .filter(meal -> meal.getUserId() == userId)
                 .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    private boolean checkUserAffiliation(int id, int userId) {
+        return (repository.get(id).getUserId() == userId);
     }
 }
