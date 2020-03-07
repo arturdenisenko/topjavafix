@@ -2,12 +2,11 @@ package ru.javawebinar.topjava.service;
 
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
-import ru.javawebinar.topjava.filter.MealByNameFilter;
-import ru.javawebinar.topjava.filter.ModelFilter;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.DateTimeUtil;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
@@ -42,14 +41,13 @@ public class MealService {
         return checkNotFoundWithId(repository.get(id, userId), id);
     }
 
-    public List<Meal> getByName(String name, Integer id) {
-        log.debug("get Meal {} by name and user id {}", name, id);
-        ModelFilter filter = new MealByNameFilter();
-        return filter.meetCriteria((List) repository.getAll(id), name);
+
+    public List<Meal> getByTime(LocalTime startTime, LocalTime endTime, Integer userId) {
+        return repository.getAll(userId).stream().filter(meal -> DateTimeUtil.isBetweenInclusiveTime(meal.getTime(), startTime, endTime)).collect(Collectors.toList());
     }
 
-    public List<Meal> getByDateTime(LocalTime startDateTime, LocalTime endDateTime, Integer userId) {
-        return repository.getAll(userId).stream().filter(meal -> DateTimeUtil.isBetweenInclusive(meal.getTime(), startDateTime, endDateTime)).collect(Collectors.toList());
+    public List<Meal> getByDate(LocalDate startDate, LocalDate endDate, Integer userId) {
+        return repository.getAll(userId).stream().filter(meal -> DateTimeUtil.isBetweenInclusiveDate(meal.getDate(), startDate, endDate)).collect(Collectors.toList());
     }
 
     public List<Meal> getUserMeals(Integer userId) {

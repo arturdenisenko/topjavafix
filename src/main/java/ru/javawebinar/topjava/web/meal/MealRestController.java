@@ -2,9 +2,11 @@ package ru.javawebinar.topjava.web.meal;
 
 import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -24,7 +26,7 @@ public class MealRestController {
     }
 
     public List<Meal> getAll(int userId) {
-        log.info("get all meals from user with id {}", userId);
+        log.info("get all meals for user with id {}", userId);
         return service.getUserMeals(userId);
     }
 
@@ -50,13 +52,13 @@ public class MealRestController {
         service.update(meal, userId);
     }
 
-    public List<Meal> getByName(String name, Integer userId) {
-        log.info("get meal by description {} and user id {}", name, userId);
-        return service.getByName(name, userId);
+    public List<Meal> getByTime(LocalTime startTime, LocalTime endTime, Integer userId) {
+        log.info("get meal filter by date time start date time = {} end date time = {} user id = {}", startTime, endTime, userId);
+        return service.getByTime(startTime, endTime, userId);
     }
 
-    public List<Meal> getByDateTime(LocalTime startDateTime, LocalTime endDateTime, Integer userId) {
-        log.info("get meal filter by date time start date time = {} end date time = {} user id = {}", startDateTime, endDateTime, userId);
-        return service.getByDateTime(startDateTime, endDateTime, userId);
+    public List<Meal> getByDate(LocalDate startDate, LocalDate endDate, Integer userId) {
+        log.info("get meal filter by date time start date time = {} end date time = {} user id = {}", startDate, endDate, userId);
+        return service.getByDate(startDate, endDate, userId);
     }
 }

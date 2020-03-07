@@ -15,8 +15,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Objects;
 
 public class MealServlet extends HttpServlet {
@@ -42,10 +45,14 @@ public class MealServlet extends HttpServlet {
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
                 Integer.parseInt(request.getParameter("calories")));
-
-        log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
-        mealRestController.create(meal, userId);
-        response.sendRedirect("meals");
+        if (meal.isNew()) {
+            log.info("Create {}", meal);
+            mealRestController.create(meal, userId);
+        } else {
+            log.info("Update {}", meal);
+            mealRestController.update(meal, userId);
+        }
+        response.sendRedirect("meals?action=getAll&userId=" + userId);
     }
 
     @Override
@@ -58,9 +65,20 @@ public class MealServlet extends HttpServlet {
         switch (action == null ? "all" : action) {
             case "delete":
                 int id = getId(request);
-                log.info("Delete {}", id);
+                log.info("Delete {} for user {}", id, userId);
                 mealRestController.delete(id, userId);
-                response.sendRedirect("meals");
+                response.sendRedirect("meals?action=getAll&userId=" + userId);
+                break;
+            case "filter":
+                log.info("filter by date or time");
+                LocalDate fromDate = LocalDate.parse(request.getParameter("fromDate"));
+                LocalDate toDate = LocalDate.parse(request.getParameter("toDate"));
+                LocalTime fromTime = LocalTime.parse(request.getParameter("fromTime"));
+                LocalTime toTime = LocalTime.parse(request.getParameter("toTime"));
+                List<Meal> tempList = mealRestController.getByDate(fromDate, toDate, userId);
+                tempList = mealRestController.getByTime(fromTime, toTime, userId);
+                request.setAttribute("meals", MealsUtil.getTos(tempList, SecurityUtil.authUserCaloriesPerDay()));
+                request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
             case "create":
             case "update":
