@@ -1,7 +1,6 @@
 package ru.javawebinar.topjava.web.meal;
 
 import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
@@ -30,12 +29,12 @@ public class MealRestController {
     }
 
     public Meal get(int id, int userId) {
-        log.info("get meal wtih {}", id);
+        log.info("get meal with {}, user id {}", id, userId);
         return service.get(id, userId);
     }
 
     public Meal create(Meal meal, int userId) {
-        log.info("create {}", meal);
+        log.info("create meal {} for user {}", meal, userId);
         checkNew(meal);
         return service.create(meal, userId);
     }
@@ -47,7 +46,7 @@ public class MealRestController {
 
     public void update(Meal meal, int userId) {
         log.info("update {} with id={}", meal, userId);
-        assureIdConsistent(meal, userId);
+        assureIdConsistent(meal, meal.getId());
         service.update(meal, userId);
     }
 

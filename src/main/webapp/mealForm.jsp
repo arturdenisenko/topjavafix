@@ -24,36 +24,46 @@
     </style>
 </head>
 <body>
-<section>
-    <h3><a href="index.html">Home</a></h3>
-    <hr>
-    <h2>${param.action == 'create' ? 'Create meal' : 'Edit meal'}</h2>
-    <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
-    <form method="post" action="meals">
-        <input type="hidden" name="id" value="${meal.id}">
-        <dl>
-            <dt>User Id:</dt>
-            <dd><select name="userId">
-                <option value="1">User 1</option>
-                <option value="2">User 2</option>
-                <option value="3">User 3 test not exist</option>
-            </select>></dd>
-        </dl>
-        <dl>
-            <dt>DateTime:</dt>
-            <dd><input type="datetime-local" value="${meal.dateTime}" name="dateTime" required></dd>
-        </dl>
-        <dl>
-            <dt>Description:</dt>
-            <dd><input type="text" value="${meal.description}" size=40 name="description" required></dd>
-        </dl>
-        <dl>
-            <dt>Calories:</dt>
-            <dd><input type="number" value="${meal.calories}" name="calories" required></dd>
-        </dl>
-        <button type="submit">Save</button>
-        <button onclick="window.history.back()" type="button">Cancel</button>
-    </form>
-</section>
+<c:choose>
+<%--    <jsp:useBean id="userId" scope="request" type="java.lang.Integer"/>--%>
+    <c:when test="${userId==null}">
+    You are not login, choose user please..
+        <button onclick="window.history.back()" type="button">Back</button>
+    </c:when>
+    <c:otherwise>
+        <section>
+            <h3><a href="index.html">Home</a></h3>
+            <hr>
+            <h2>${param.action == 'create' ? 'Create meal' : 'Edit meal'}</h2>
+            <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
+            <form method="post" action="meals">
+                <input type="hidden" name="id" value="${meal.id}">
+                <input type="hidden" name="userId" value="${userId}">
+                    <%--   <dl>
+                           <dt>User Id:</dt>
+                           <dd><select name="userId">
+                               <option value="1">User 1</option>
+                               <option value="2">User 2</option>
+                               <option value="3">User 3 test not exist</option>
+                           </select></dd>
+                       </dl>--%>
+                <dl>
+                    <dt>DateTime:</dt>
+                    <dd><input type="datetime-local" value="${meal.dateTime}" name="dateTime" required></dd>
+                </dl>
+                <dl>
+                    <dt>Description:</dt>
+                    <dd><input type="text" value="${meal.description}" size=40 name="description" required></dd>
+                </dl>
+                <dl>
+                    <dt>Calories:</dt>
+                    <dd><input type="number" value="${meal.calories}" name="calories" required></dd>
+                </dl>
+                <button type="submit">Save</button>
+                <button onclick="window.history.back()" type="button">Cancel</button>
+            </form>
+        </section>
+    </c:otherwise>
+</c:choose>
 </body>
 </html>

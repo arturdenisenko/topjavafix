@@ -38,7 +38,7 @@ public class MealServlet extends HttpServlet {
         String id = request.getParameter("id");
         int userId = Integer.parseInt(request.getParameter("userId"));
 
-        Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id), Integer.valueOf(userId),
+        Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id), userId,
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
                 Integer.parseInt(request.getParameter("calories")));
@@ -52,12 +52,9 @@ public class MealServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
         int userId;
-        try {
-            userId = Integer.parseInt(request.getParameter("userId"));
-        } catch (Exception e) {
-            userId = SecurityUtil.authUserId();
-            log.error(e.getMessage(), e);
-        }
+        userId = Integer.parseInt(request.getParameter("userId"));
+        request.setAttribute("userId", userId);
+
         switch (action == null ? "all" : action) {
             case "delete":
                 int id = getId(request);
@@ -70,6 +67,7 @@ public class MealServlet extends HttpServlet {
                 final Meal meal = "create".equals(action) ?
                         new Meal(userId, LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
                         mealRestController.get(getId(request), userId);
+
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
                 break;
@@ -81,6 +79,7 @@ public class MealServlet extends HttpServlet {
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }
+
     }
 
     private int getId(HttpServletRequest request) {
