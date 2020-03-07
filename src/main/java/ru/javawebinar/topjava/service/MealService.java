@@ -42,12 +42,12 @@ public class MealService {
     }
 
 
-    public List<Meal> getByTime(LocalTime startTime, LocalTime endTime, Integer userId) {
-        return repository.getAll(userId).stream().filter(meal -> DateTimeUtil.isBetweenInclusiveTime(meal.getTime(), startTime, endTime)).collect(Collectors.toList());
+    public List<Meal> getByTime(LocalTime startTime, LocalTime endTime, List<Meal> list, Integer userId) {
+        return list.stream().filter(meal -> DateTimeUtil.isBetweenInclusiveTime(meal.getTime(), startTime, endTime)).collect(Collectors.toList());
     }
 
-    public List<Meal> getByDate(LocalDate startDate, LocalDate endDate, Integer userId) {
-        return repository.getAll(userId).stream().filter(meal -> DateTimeUtil.isBetweenInclusiveDate(meal.getDate(), startDate, endDate)).collect(Collectors.toList());
+    public List<Meal> getByDate(LocalDate startDate, LocalDate endDate, List<Meal> list, Integer userId) {
+        return list.stream().filter(meal -> DateTimeUtil.isBetweenInclusiveDate(meal.getDate(), startDate, endDate)).collect(Collectors.toList());
     }
 
     public List<Meal> getUserMeals(Integer userId) {
@@ -58,7 +58,6 @@ public class MealService {
                 .sorted(Comparator.comparing(Meal::getDate).reversed())
                 .collect(Collectors.toList());
     }
-
 
     public void update(Meal meal, int userId) {
         checkNotFoundWithId(repository.save(meal, userId), meal.getId());

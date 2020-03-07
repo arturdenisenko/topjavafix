@@ -25,6 +25,7 @@
     <form method="GET" action="meals">
         <input type="hidden" name="action" value="filter">
         <input type="hidden" name="userId" value="${userId}">
+        <input type="hidden" name="mealsToFilter" value="${meals}">
         <table border="0">
             <tr>
                 <th>From Date</th>

@@ -71,12 +71,21 @@ public class MealServlet extends HttpServlet {
                 break;
             case "filter":
                 log.info("filter by date or time");
-                LocalDate fromDate = LocalDate.parse(request.getParameter("fromDate"));
-                LocalDate toDate = LocalDate.parse(request.getParameter("toDate"));
-                LocalTime fromTime = LocalTime.parse(request.getParameter("fromTime"));
-                LocalTime toTime = LocalTime.parse(request.getParameter("toTime"));
-                List<Meal> tempList = mealRestController.getByDate(fromDate, toDate, userId);
-                tempList = mealRestController.getByTime(fromTime, toTime, userId);
+                LocalDate fromDate = LocalDate.of(0, 1, 1);
+                LocalDate toDate = LocalDate.of(2999, 12, 31);
+                LocalTime fromTime = LocalTime.of(0, 0);
+                LocalTime toTime = LocalTime.of(23, 59);
+                try {
+                    fromDate = LocalDate.parse(request.getParameter("fromDate"));
+                    toDate = LocalDate.parse(request.getParameter("toDate"));
+                    fromTime = LocalTime.parse(request.getParameter("fromTime"));
+                    toTime = LocalTime.parse(request.getParameter("toTime"));
+                } catch (Exception e) {
+                    log.info("{}{}", e, e.getMessage());
+                }
+                List<Meal> tempList = mealRestController.getAll(userId);
+                tempList = mealRestController.getByDate(fromDate, toDate, tempList, userId);
+                tempList = mealRestController.getByTime(fromTime, toTime, tempList, userId);
                 request.setAttribute("meals", MealsUtil.getTos(tempList, SecurityUtil.authUserCaloriesPerDay()));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;

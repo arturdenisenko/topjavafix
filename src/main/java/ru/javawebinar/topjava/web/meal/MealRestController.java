@@ -2,9 +2,9 @@ package ru.javawebinar.topjava.web.meal;
 
 import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
+import ru.javawebinar.topjava.to.MealTo;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -52,13 +52,13 @@ public class MealRestController {
         service.update(meal, userId);
     }
 
-    public List<Meal> getByTime(LocalTime startTime, LocalTime endTime, Integer userId) {
+    public List<Meal> getByTime(LocalTime startTime, LocalTime endTime, List<Meal> list, Integer userId) {
         log.info("get meal filter by date time start date time = {} end date time = {} user id = {}", startTime, endTime, userId);
-        return service.getByTime(startTime, endTime, userId);
+        return service.getByTime(startTime, endTime, list, userId);
     }
 
-    public List<Meal> getByDate(LocalDate startDate, LocalDate endDate, Integer userId) {
+    public List<Meal> getByDate(LocalDate startDate, LocalDate endDate, List<Meal> list, Integer userId) {
         log.info("get meal filter by date time start date time = {} end date time = {} user id = {}", startDate, endDate, userId);
-        return service.getByDate(startDate, endDate, userId);
+        return service.getByDate(startDate, endDate, list, userId);
     }
 }
