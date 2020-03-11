@@ -22,6 +22,7 @@ public class SpringMain {
             System.out.println(u);
 
         }
+        System.out.println(us);
         MealRepository mr = new InMemoryMealRepository();
         //Get check
         System.out.println("<<=Get check=>>");
